@@ -1,4 +1,5 @@
 import React from "react";
+import Card from "./components/Card";
 import Searchbar from "./components/Searchbar";
 import Dropdown from "./components/Dropdown";
 import { IoMoon } from "react-icons/io5";
@@ -42,10 +43,13 @@ const Home = () => {
           {colorMode === "light" ? <IoMoon /> : <LuSun size="20" />}
         </button>
       </div>
-      <div className="mt-20 flex flex-col items-center justify-center">
+      <div className="flex justify-center items-center mt-12">
+        <Card/>
+      </div>
+      {/* <div className="mt-20 flex flex-col items-center justify-center">
         <img src={pic} alt="" />
         <span className="text-xl font-semibold">Empty ...</span>
-      </div>
+      </div> */}
       <footer className="relative h-full">
         <button
           onClick={onOpen}
