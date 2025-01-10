@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./components/Card";
 import Searchbar from "./components/Searchbar";
 import Dropdown from "./components/Dropdown";
@@ -18,11 +18,19 @@ import {
 } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa6";
 import pic from "./images/img.png";
+import { useTaskStore } from "./api/task";
 
 const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const { fetchTasks, tasks } = useTaskStore();
+
+  useEffect(() => {
+    fetchTasks();
+    console.log("Fetching products ... ");
+  }, [fetchTasks]);
 
   return (
     <>
@@ -33,6 +41,7 @@ const Home = () => {
       >
         TODO LIST
       </h1>
+
       <div className="flex items-center justify-center mt-10">
         <Searchbar />
         <Dropdown />
@@ -43,18 +52,27 @@ const Home = () => {
           {colorMode === "light" ? <IoMoon /> : <LuSun size="20" />}
         </button>
       </div>
-      <div className="flex justify-center items-center mt-12">
-        <Card/>
-      </div>
-      {/* <div className="mt-20 flex flex-col items-center justify-center">
-        <img src={pic} alt="" />
-        <span className="text-xl font-semibold">Empty ...</span>
-      </div> */}
+
+      {tasks.length > 0 ? (
+        <div className="flex justify-center items-center mt-12">
+          {tasks.map((task) => {
+            console.log("Rendering task:", task);
+            return <Card key={task.id} task={task} />;
+          })}
+          {/* */}
+        </div>
+      ) : (
+        <div className="mt-20 flex flex-col items-center justify-center">
+          <img src={pic} alt="" />
+          <span className="text-xl font-semibold">Empty ...</span>
+        </div>
+      )}
+
       <footer className="relative h-full">
         <button
           onClick={onOpen}
           className={`fixed bottom-16 right-32 p-4  rounded-full ${
-            colorMode === "light" ? "bg-violet-600" : "bg-violet-400"
+            colorMode === "light" ? "bg-violet-600" : "bg-violet-600"
           }`}
         >
           <FaPlus className="text-2xl text-white" />
@@ -63,7 +81,11 @@ const Home = () => {
       <Modal isOpen={isOpen} onClose={onClose} size={"md"}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader fontSize={28} fontWeight={"bold"} className=" font-extrabold text-center">
+          <ModalHeader
+            fontSize={28}
+            fontWeight={"bold"}
+            className=" font-extrabold text-center"
+          >
             NEW NOTE
           </ModalHeader>
           <ModalCloseButton />
@@ -76,8 +98,12 @@ const Home = () => {
             />
           </ModalBody>
           <ModalFooter mt={40}>
-            <button className="w-[7rem] h-10 border-[2px] border-violet-600 text-violet-600 font-semibold rounded-xl mr-44">CANCEL</button>
-            <button className="w-[7rem] h-10 bg-violet-600 rounded-xl text-white font-semibold">APPLY</button>
+            <button className="w-[7rem] h-10 border-[2px] border-violet-600 text-violet-600 font-semibold rounded-xl mr-44">
+              CANCEL
+            </button>
+            <button className="w-[7rem] h-10 bg-violet-600 rounded-xl text-white font-semibold">
+              APPLY
+            </button>
           </ModalFooter>
         </ModalContent>
       </Modal>
