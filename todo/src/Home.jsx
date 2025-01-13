@@ -28,7 +28,11 @@ const Home = () => {
 
   const { fetchTasks,tasks,createTask } = useTaskStore();
 
-  const [taskInput, setTaskInput] = useState(""); 
+  const [newTask, setNewTask] = useState({
+    name: ""
+  }); 
+
+
 
 
   useEffect(() => {
@@ -37,25 +41,18 @@ const Home = () => {
   }, [fetchTasks]);
 
 
-  const handleInputChange = (e) => {
-    setTaskInput(e.target.value)
-  }
-
-  const handleTaskCreation  = async () =>{
-    if (taskInput.trim() === ""){
-      alert("Please enter a task")
-      return
-    }
-
-    const newTask = {name : taskInput}
-    const result = await createTask(newTask);
+ 
+  const handleTaskCreation = async () => {
+    const result = await createTask(newTask)
     if (result.success) { 
-      setTaskInput("");
-      onClose();
+      onClose()
     }else{
       alert(result.message)
     }
+    setNewTask({name:""})
   }
+
+   
 
   return (
     <>
@@ -79,21 +76,20 @@ const Home = () => {
         </button>
       </div>
 
-      {tasks.length > 0 ? (
-        <div className="flex flex-col gap-8 justify-center items-center mt-12">
-          {(tasks || []).map((task) => {
-            console.log("Rendering task:", task);
-            return <Card key={task.id} task={task} />;
-          })}
-          {/* */}
-        </div>
-      ) : (
-        <div className="mt-20 flex flex-col items-center justify-center">
-          <img src={pic} alt="" />
-          <span className="text-xl font-semibold">Empty ...</span>
-        </div>
-      )}
+      
+      <div className="flex flex-col gap-8 justify-center items-center mt-12">
+        {(Array.isArray(tasks) && tasks.length > 0) ? (
+          tasks.map((task) => (
+            <Card task={task} />
+        ))) :(
+          <div className="mt-20 flex flex-col items-center justify-center">
+            <img src={pic} alt="" />
+            <span className="text-xl font-semibold">Empty ...</span>
+          </div>
+        )}
+      </div>
 
+              
       <footer className="relative h-full">
         <button
           onClick={onOpen}
@@ -104,7 +100,7 @@ const Home = () => {
           <FaPlus className="text-2xl text-white" />
         </button>
       </footer>
-      <Modal isOpen={isOpen} onClose={onClose} size={"md"}>
+     <Modal isOpen={isOpen} onClose={onClose} size={"md"}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -117,11 +113,12 @@ const Home = () => {
           <ModalCloseButton />
           <ModalBody>
             <input
-              value={taskInput}
-              onChange={handleInputChange}
+              name='name'
+              value={newTask.name}
+              onChange={(e)=> setNewTask({...newTask,name:e.target.value})}
               placeholder="Input your note..."
               className={`w-[25rem] pl-3 p-2 rounded-lg border-2 ${
-                colorMode === "light" ? "border-violet-600" : "border-white"
+              useColorMode === "light" ? "border-violet-600" : "border-white"
               }`}
             />
           </ModalBody>
@@ -134,7 +131,7 @@ const Home = () => {
             </button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal >
       </div>
     </>
     

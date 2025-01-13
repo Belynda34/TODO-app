@@ -64,7 +64,7 @@ export const deleteTask = async (req,res) => {
         }
         res.status(200).json({success:true,message:"Task Deleted"})
     }catch(error){
-        console.error("Error deleting product:",error.message);
+        console.error("Error deleting task:",error);
         res.status(500).json({success:false,message:"Server Error"});
     }
 }
