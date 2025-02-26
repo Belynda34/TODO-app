@@ -48,7 +48,7 @@ export const useTaskStore = create((set) => ({
   deleteTask: async (id) => {
 
     try {
-      const response = await axios.delete(`http://localhost:5000/api/tasks/${id}`)
+      const response = await axios.delete(`http://localhost:5000/api/delete/tasks/${id}`)
       const result = response.data
       if (result.success){
         set((state) => ({

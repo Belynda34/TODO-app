@@ -38,7 +38,7 @@ export const updateTask = async (req,res) =>{
         const task = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({success:false,message:"Invalid id"})
+        return res.status(400).json({success:false,message:"Invalid id"})
     }
     try{
         const updatedTask = await Task.findByIdAndUpdate(id,task,{new:true})
@@ -55,7 +55,7 @@ export const updateTask = async (req,res) =>{
 export const deleteTask = async (req,res) => {
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)){
-        res.status(404).json({success:false,message:"Invalid id"})
+        res.status(400).json({success:false,message:"Invalid id"})
     }
     try{
         const deletedTask = await Task.findByIdAndDelete(id)
